@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY pyproject.toml .
 RUN apt-get update && apt-get install -y --no-install-recommends pipx
-# RUN pipx install uv
 ENV PATH="/root/.local/bin:${PATH}"
 RUN pipx install uv
 RUN uv sync

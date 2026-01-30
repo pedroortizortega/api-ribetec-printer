@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    restart: unless-stopped
     environment:
       - HOST_RIBETEC_PRINTER=192.168.100.5
       - PRINTER_PORT=9100
