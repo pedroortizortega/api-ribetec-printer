@@ -39,10 +39,11 @@ class ZPLGenerator:
         self.zpl_commands = [
             "^XA",  # Inicio de formato
             "^CI28",  # UTF-8 encoding para caracteres especiales (ñ, acentos, etc.)
-            "^MNN",  # Media tracking: N=continuous, elimina calibración/backfeed
+            "^MNW",  # Media tracking: Web sensing (detección de gap para etiquetas troqueladas)
             f"^PW{width_dots}",  # Ancho de impresión
             f"^LL{height_dots}",  # Largo de etiqueta
             "^LH0,0",  # Home position
+            # "^JMA",  # Reimprime automáticamente después de error (evita pausas)
         ]
 
     def _end_label(self, copies: int = 1) -> None:

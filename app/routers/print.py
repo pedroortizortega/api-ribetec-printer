@@ -1,6 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query
 from app.models import LabelRequest, SimpleLabelRequest, PrintResponse
 from app.services import PrinterService, PrinterConnectionError, ZPLGenerator
+import logging
+
+# Configurar el logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/print", tags=["Printing"])
 
@@ -21,8 +26,8 @@ async def print_label(request: LabelRequest, preview_only: bool = Query(False)):
     """
     generator = ZPLGenerator()
     zpl_code = generator.generate_from_request(request)
-
     if preview_only:
+        logger.info(f"Etiqueta enviada correctamente ({dict(request)})")
         return PrintResponse(
             success=True,
             message="Vista previa generada (no se envió a la impresora)",
@@ -32,12 +37,14 @@ async def print_label(request: LabelRequest, preview_only: bool = Query(False)):
     printer = PrinterService()
     try:
         await printer.send_zpl(zpl_code)
+        logger.info(f"Etiqueta enviada correctamente ({dict(request)})")
         return PrintResponse(
             success=True,
             message=f"Etiqueta enviada correctamente ({request.copies} copia(s))",
             zpl_preview=zpl_code
         )
     except PrinterConnectionError as e:
+        logger.error(f"Error al enviar la etiqueta: {e}")
         raise HTTPException(status_code=503, detail=str(e))
 
 
