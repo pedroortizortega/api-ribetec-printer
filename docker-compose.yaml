@@ -1,0 +1,12 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST_RIBETEC_PRINTER=192.168.100.5
+      - PRINTER_PORT=9100
+      - APP_TITLE=Ribetec Printer API
+      - APP_VERSION=1.0.0

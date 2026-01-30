@@ -39,7 +39,7 @@ class ZPLGenerator:
         self.zpl_commands = [
             "^XA",  # Inicio de formato
             "^CI28",  # UTF-8 encoding para caracteres especiales (ñ, acentos, etc.)
-            "^MNN",  # Media tracking: N=continuous, elimina calibración/backfeed
+            "^MNY",  # Media tracking: N=continuous, elimina calibración/backfeed
             f"^PW{width_dots}",  # Ancho de impresión
             f"^LL{height_dots}",  # Largo de etiqueta
             "^LH0,0",  # Home position
