@@ -89,11 +89,41 @@ class ZPLGenerator:
 
         self.zpl_commands.append(f"^FD{element.data}^FS")
 
+    def _encode_qr_data(self, data: str) -> str:
+        """Codifica datos para QR con soporte de caracteres especiales y saltos de línea.
+
+        Usa ^FH (Field Hexadecimal) con _ como indicador de escape.
+        Los saltos de línea se codifican como _0D_0A (CR+LF) para máxima compatibilidad.
+        """
+        encoded = []
+        for char in data:
+            if char == '\n':
+                # CR+LF para máxima compatibilidad con lectores QR
+                encoded.append("_0D_0A")
+            elif char == '\r':
+                # Ignorar CR sueltos si ya vienen en el texto
+                continue
+            elif char == '_':
+                # Escapar el carácter de escape
+                encoded.append("_5F")
+            elif char == '^':
+                # Escapar el carácter de control ZPL
+                encoded.append("_5E")
+            else:
+                encoded.append(char)
+        return "".join(encoded)
+
     def _add_qr_code(self, element: QRCodeElement) -> None:
-        """Añade un código QR"""
+        """Añade un código QR con soporte para saltos de línea"""
         self.zpl_commands.append(f"^FO{element.x},{element.y}")
         self.zpl_commands.append(f"^BQN,2,{element.size}")
-        self.zpl_commands.append(f"^FDQA,{element.data}^FS")
+
+        # Usar ^FH para habilitar codificación hexadecimal si hay caracteres especiales
+        if '\n' in element.data or '\r' in element.data or '_' in element.data or '^' in element.data:
+            encoded_data = self._encode_qr_data(element.data)
+            self.zpl_commands.append(f"^FH_^FDQA,{encoded_data}^FS")
+        else:
+            self.zpl_commands.append(f"^FDQA,{element.data}^FS")
 
     def _add_line(self, element: LineElement) -> None:
         """Añade una línea o rectángulo"""
@@ -139,7 +169,7 @@ class ZPLGenerator:
             x=50,
             y=current_y,
             text=request.title,
-            font_size=40,
+            font_size=60,
             bold=True
         )
         self._add_text(title_element)
@@ -151,7 +181,7 @@ class ZPLGenerator:
                 x=50,
                 y=current_y,
                 text=request.subtitle,
-                font_size=28,
+                font_size=45,
                 bold=False
             )
             self._add_text(subtitle_element)
