@@ -11,3 +11,13 @@ services:
       - PRINTER_PORT=9100
       - APP_TITLE=Ribetec Printer API
       - APP_VERSION=1.0.0
+      # BD (elige UNA opción)
+      # Opción A: URL completa
+      # - DATABASE_URL=postgresql://user:password@host:5432/dbname?sslmode=require
+      # Opción B: campos sueltos
+      - DB_HOST=don-choche-db.cjc4w8046k06.us-west-1.rds.amazonaws.com
+      - DB_PORT=49322
+      - DB_USER=don_choche_admin
+      - DB_PASSWORD=QMiHTRozQMNG+bbkUfEci9ttojxFj7g2762bFr2kY=
+      - DB_NAME=don_choche
+      - DB_SSLMODE=prefer
