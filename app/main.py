@@ -16,7 +16,6 @@ settings = get_settings()
 def _startup_update_local_ip():
     logger.info("Actualizando IP local en la BD")
     db_url = settings.resolved_database_url()
-    logger.info(f"database_url: {db_url}")    
     res = IpService(database_url=db_url).update_ip_local()
     if res:
         logger.info("IP local actualizada en la BD")

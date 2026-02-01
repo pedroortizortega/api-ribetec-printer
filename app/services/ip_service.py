@@ -1,5 +1,14 @@
 import socket
 import psycopg
+import logging
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
 
 class IpService:
     def __init__(self, database_url: str | None = None):
@@ -26,14 +35,21 @@ class IpService:
         """
         if not self.database_url:
             return False
-
         with psycopg.connect(self.database_url) as conn:
-            print(f"Conexión a la BD: {self.database_url}")
+            logger.info(f"Ejecutando consulta en la BD")
             with conn.cursor() as cur:
                 cur.execute(
                     "UPDATE public.configuracion_printers SET ip = %s WHERE id = %s",
                     (self.ip_local, 1),
                 )
+                conn.commit()
+                logger.info(f"Columnas afectadas: {cur.rowcount}")
+                if cur.rowcount > 0:
+                    logger.info(f"IP local actualizada en la BD")
+                else:
+                    logger.error(f"IP local no actualizada en la BD")
+                    return False
+                
         return True
 
 if __name__ == "__main":
