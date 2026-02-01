@@ -1,6 +1,7 @@
 import socket
 import psycopg
 import logging
+import os
 
 
 logging.basicConfig(
@@ -17,12 +18,14 @@ class IpService:
         
     def obtener_ip_local(self):
         try:
-            # Crea un socket temporal y conecta a una dirección inexistente
-            # Esto no requiere conexión real, pero permite obtener la IP local
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(("8.8.8.8", 80))  # Google DNS (no se envía tráfico real)
-            ip_local = s.getsockname()[0]
-            s.close()
+            ip_local = os.getenv("HOST_LAN_IP")
+            if ip_local is None:
+                # Crea un socket temporal y conecta a una dirección inexistente
+                # Esto no requiere conexión real, pero permite obtener la IP local
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                s.connect(("8.8.8.8", 80))  # Google DNS (no se envía tráfico real)
+                ip_local = s.getsockname()[0]
+                s.close()
             return ip_local
         except Exception:
             return "127.0.0.1"  # Fallback si falla

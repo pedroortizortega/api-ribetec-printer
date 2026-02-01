@@ -21,3 +21,4 @@ services:
       - DB_PASSWORD=QMiHTRozQMNG+bbkUfEci9ttojxFj7g2762bFr2kY=
       - DB_NAME=don_choche
       - DB_SSLMODE=prefer
+      - HOST_LAN_IP=${HOST_LAN_IP}
