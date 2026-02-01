@@ -26,12 +26,6 @@ class Settings(BaseSettings):
     db_password: str | None = os.getenv("DB_PASSWORD")
     db_name: str | None = os.getenv("DB_NAME")
     db_sslmode: str = os.getenv("DB_SSLMODE", "prefer")
-    logger.info(f"db_host: {db_host}")
-    logger.info(f"db_port: {db_port}")
-    logger.info(f"db_user: {db_user}")
-    logger.info(f"db_password: {db_password}")
-    logger.info(f"db_name: {db_name}")
-    logger.info(f"db_sslmode: {db_sslmode}")
 
     # @property
     def resolved_database_url(self) -> str | None:
@@ -43,8 +37,6 @@ class Settings(BaseSettings):
             return None
         logger.info(f"db_host: {self.db_host}")
         logger.info(f"db_port: {self.db_port}")
-        logger.info(f"db_user: {self.db_user}")
-        logger.info(f"db_password: {self.db_password}")
         logger.info(f"db_name: {self.db_name}")
         logger.info(f"db_sslmode: {self.db_sslmode}")
         user = quote(self.db_user, safe="")
