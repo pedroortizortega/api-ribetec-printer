@@ -5,7 +5,8 @@ case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*) OS="Windows";;
     *) echo OS="Unknown";;
 esac
-
+# bajando el compose actual
+docker compose down
 
 # Este script es Bash, pero en Windows la IP LAN la obtendremos con PowerShell
 # y la pasamos a docker compose como variable de entorno.
