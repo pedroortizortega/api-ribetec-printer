@@ -51,7 +51,7 @@ class BarcodeElement(LabelElement):
 class QRCodeElement(LabelElement):
     """Elemento de código QR"""
     data: str
-    size: int = Field(default=5, ge=15, le=300, description="Factor de magnificación")
+    size: int = Field(default=5, ge=1, le=300, description="Factor de magnificación")
 
 
 class LineElement(LabelElement):
