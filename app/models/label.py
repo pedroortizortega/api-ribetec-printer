@@ -44,7 +44,7 @@ class BarcodeElement(LabelElement):
     data: str
     barcode_type: BarcodeType = BarcodeType.CODE128
     height: int = Field(default=50, ge=20, le=200)
-    width: int = Field(default=2, ge=1, le=10, description="Ancho de las barras")
+    width: int = Field(default=2, ge=1, le=300, description="Ancho de las barras")
     show_text: bool = True
 
 
