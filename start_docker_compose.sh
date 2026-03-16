@@ -1,21 +1,28 @@
 #!/bin/bash
-case "$(uname -s)" in 
-    Linux*) OS=Linux ;;
-    Darwin*) OS=Darwin ;;
-    MINGW*|MSYS*|CYGWIN*) OS="Windows";;
-    *) echo OS="Unknown";;
-esac
 # bajando el compose actual
 docker compose down
 
-# Este script es Bash, pero en Windows la IP LAN la obtendremos con PowerShell
-# y la pasamos a docker compose como variable de entorno.
-if [ $OS == "Windows" ]; then
-    IP="$(powershell.exe -NoProfile -Command "(Get-NetIPAddress -InterfaceAlias 'Wi-Fi' -AddressFamily IPv4).IPAddress" | tr -d '\r')"
-    export HOST_LAN_IP="$IP"
-    docker compose up -d --build
-else
-    IP=$(ip -4 addr show wlan0 | grep -oP 'inet \K[\d.]+')
-    export HOST_LAN_IP="$IP"
-    docker compose up -d --build
+windows_os="$(powershell.exe -NoProfile -Command '$env:OS')"
+system="$(uname -s)"
+
+echo "windows_os: $windows_os"
+
+if [ "$windows_os" == "Windows_NT" ]; then
+    echo "Windows"
+    IP=$(powershell.exe -NoProfile -Command "(Get-NetIPAddress -AddressFamily IPv4 | Where-Object { \$_.IPAddress -like '192.168.*' } | Select-Object -First 1 -ExpandProperty IPAddress)")
+    echo "Windows IP: $IP"
 fi
+
+if [ "$system" == "Linux" ]; then
+    echo "Linux"
+    IP=$(hostname -I | awk '{print $1}')
+    echo "Linux IP: $IP"
+fi
+echo "Creando el archivo env_run"
+echo "HOST_LAN_IP=$IP" >> env_run
+
+echo "Creando un build del compose"
+docker compose build
+
+echo "Ejecutando el compose"
+docker compose run -env-from-file=env_run api
