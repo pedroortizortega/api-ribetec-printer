@@ -25,4 +25,4 @@ echo "Creando un build del compose"
 docker compose build
 
 echo "Ejecutando el compose"
-docker compose run -env-from-file=env_run api
+docker compose up -d
