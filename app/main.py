@@ -44,7 +44,9 @@ app.add_middleware(
 app.include_router(print_router)
 
 
-app.add_event_handler("startup", _startup_update_local_ip)
+@app.on_event("startup")
+def startup_update_local_ip() -> None:
+    _startup_update_local_ip()
 
 
 @app.get("/", tags=["Health"])
