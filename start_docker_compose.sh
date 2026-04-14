@@ -1,6 +1,10 @@
 #!/bin/bash
 # bajando el compose actual
-docker compose down
+sleep 30
+
+rm env_run
+
+docker compose down 
 
 windows_os="$(powershell.exe -NoProfile -Command '$env:OS')"
 system="$(uname -s)"
@@ -21,8 +25,5 @@ fi
 echo "Creando el archivo env_run"
 echo "HOST_LAN_IP=$IP" >> env_run
 
-echo "Creando un build del compose"
-docker compose build
-
 echo "Ejecutando el compose"
-docker compose run -env-from-file=env_run api
+docker compose up --build --remove-orphans

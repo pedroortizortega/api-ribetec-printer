@@ -6,6 +6,7 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    env_file: env_run
     environment:
       - HOST_RIBETEC_PRINTER=192.168.100.5
       - PRINTER_PORT=9100
@@ -21,4 +22,4 @@ services:
       - DB_PASSWORD=QMiHTRozQMNG+bbkUfEci9ttojxFj7g2762bFr2kY=
       - DB_NAME=don_choche
       - DB_SSLMODE=prefer
-      - HOST_LAN_IP=${HOST_LAN_IP}
+        #- HOST_LAN_IP=${HOST_LAN_IP}
